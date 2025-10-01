@@ -31,7 +31,7 @@ export const AppContextProvider = ({children}) =>{
         } 
         else{
             setChats([])
-            selectedChat(null)
+            setSelectedChat(null)
         }
     },[user])
 
