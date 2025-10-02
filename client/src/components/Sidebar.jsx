@@ -15,7 +15,7 @@ const SideBar = () => {
       <img src={theme === 'dark' ? assets.logo_full : assets.logo_full_dark} alt="" className='w-full max-w-48'/>
 
       {/* New Chat Button*/}
-      <button className='flex justify-center items-center w-full py-2 mt-10 text-white bg-gradient-to-r from-[#A456F7] to-[#3D81F6] 
+      <button className='flex justify-center items-center w-full py-2 mt-8 text-white bg-gradient-to-r from-[#A456F7] to-[#3D81F6] 
       text-sm rounded-md cursor-pointer'>
         <span className='mr-2 text-base'>+ New Chat</span>  
       </button>
@@ -28,8 +28,8 @@ const SideBar = () => {
       </div>
 
       {/* Recent Chats */}
-      {chats.length > 0 && <p className='mt-4 text-base'>Recent Chats</p>}
-      <div className='flex-1 overflow-y-scroll mt-3 text-base space-y-3'>
+      {chats.length > 0 && <p className='mt-3 text-base'>Recent Chats</p>}
+      <div className='flex-1 overflow-y-scroll mt-3 text-base space-y-2'>
         {
           chats.filter((chat) => chat.messages[0] ? chat.messages[0]?.content.toLowerCase().includes(search.toLowerCase()) : 
           chat.name.toLowerCase().includes(search.toLowerCase())).map((chat) =>(
@@ -77,6 +77,14 @@ const SideBar = () => {
           <div className='w-9 h-5 bg-gray-400 rounded-full peer-checked:bg-purple-600 transition-all'></div>
           <span className='absolute left-1 top-1 w-3 h-3 bg-white rounded-full transition-transform peer-checked:translate-x-4'></span>
         </label>
+      </div>
+
+      {/* User Account */}
+      <div onClick={() =>{navigate('/community')}} className='flex items-center gap-3 p-2 mt-4 border border-gray-300 dark:border-white/15 rounded-md 
+      cursor-pointer group'>
+        <img src={assets.user_icon} alt="" className='w-6 rounded-full not-dark:invert'/>
+        <p className='flex-1 text-sm dark:text-primary truncate'>{user ? user.name : "Login your account"}</p>
+        {user && <img src={assets.logout_icon} className='h-5 cursor-pointer hidden not-dark:invert group-hover:block'/>}
       </div>
 
     </div>
