@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useAppContext } from '../context/AppContext'
 import { assets } from '../assets/assets'
+import moment from 'moment'
 
 const SideBar = () => {
 
@@ -38,7 +39,7 @@ const SideBar = () => {
                 <p className='truncate w-full'>
                   {chat.messages.length > 0 ? chat.messages[0].content.slice(0, 32) : chat.name}
                 </p>
-                <p className='text-sm text-gray-500 dark:text-[#B1A6C0]'>{chat.updatedAt}</p>
+                <p className='text-sm text-gray-500 dark:text-[#B1A6C0]'>{moment(chat.updatedAt).fromNow()}</p>
               </div>
               <img src={assets.bin_icon} alt="" className='hidden group-hover:block w-4 cursor-pointer not-dark:invert'/>
             </div>
