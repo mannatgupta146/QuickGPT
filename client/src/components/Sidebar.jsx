@@ -87,6 +87,8 @@ const SideBar = () => {
         {user && <img src={assets.logout_icon} className='h-5 cursor-pointer hidden not-dark:invert group-hover:block'/>}
       </div>
 
+      <img src={assets.close_icon} alt="" className='absolute top-3 right-3 w-5 h-5 cursor-pointer md:hidden not-dark:invert'/>
+
     </div>
   )
 }
