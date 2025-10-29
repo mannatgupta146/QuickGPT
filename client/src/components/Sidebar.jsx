@@ -21,7 +21,7 @@ const SideBar = ({isMenuOpen, setIsMenuOpen}) => {
       </button>
 
       {/* Search Conversations*/}
-      <div className='flex items-center gap-2 p-3 mt-4 border border-gray-400 dark:border-white/20 rounded-md'>
+      <div className='flex items-center gap-2 p-2 mt-4 border border-gray-400 dark:border-white/20 rounded-md'>
         <img src={assets.search_icon} alt="" className='w-4 not-dark:invert'/>
         <input onChange={(e) =>setSearch(e.target.value)} value={search} type="text" placeholder='Search Conversations' 
         className='text-base placeholder:text-gray-400 outline-none'/>
