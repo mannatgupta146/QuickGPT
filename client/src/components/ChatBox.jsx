@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useAppContext } from '../context/AppContext';
 import { assets } from '../assets/assets';
+import Message from './Message';
 const ChatBox = () => {
 
   const {selectedChat, theme} = useAppContext();
@@ -31,7 +32,9 @@ const ChatBox = () => {
           </div>
         )}
 
-        
+        {messages.map((message, index)=>(
+          <Message key={index} message={message}/>
+        ))}
       </div>
 
       {/* Prompt Input Box */}
