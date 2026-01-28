@@ -21,7 +21,7 @@ const App = () => {
 
   return (
     <>
-    {!isMenuOpen && <img src={assets.menu_icon} className='absolute top-3 left-3 w-8 h-8 cursor-pointer md:hidden not-dark:invert'
+    {!isMenuOpen && <img src={assets.menu_icon} className='absolute top-3 left-3 w-8 h-8 cursor-pointer md:hidden dark:invert'
     onClick={() =>setIsMenuOpen(true)}/>}
 
     {user ? (
@@ -36,7 +36,7 @@ const App = () => {
       </div>
     </div>
     ) : (
-      <div className='bg-gradient-to-b from-[#242124] to-[#000000] flex items-center justify-center h-screen w-screen'><Login /></div>
+      <div className='bg-gradient-to-b from-purple-200 via-purple-500 to-[#1a1028] flex items-center justify-center h-screen w-screen'><Login /></div>
     )
     }
     </>
