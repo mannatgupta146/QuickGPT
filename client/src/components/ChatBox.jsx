@@ -32,7 +32,7 @@ const ChatBox = () => {
     if(containerRef.current){
       containerRef.current.scrollTo({
         top: containerRef.current.scrollHeight,
-        behaviour: "smooth"
+        behavior: "smooth"
       })
     }
   }, [messages])
