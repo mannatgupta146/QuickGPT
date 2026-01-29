@@ -2,6 +2,7 @@ import express from 'express'
 import 'dotenv/config'
 import cors from 'cors'
 import connectDB from './configs/db.js'
+import userRouter from './routes/UserRoutes.js'
 
 const app = express()
 
@@ -15,6 +16,9 @@ app.use(express.json())
 app.get('/', (req, res) => {
     res.send("server is live")
 })
+
+app.use('/api/user', userRouter)
+
 
 const PORT = process.env.PORT || 3000
 
