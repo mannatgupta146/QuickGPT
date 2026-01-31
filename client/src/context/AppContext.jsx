@@ -21,7 +21,9 @@ export const AppContextProvider = ({children}) =>{
 
     const fetchUser = async() =>{
         try {
-            const {data} = await axios.get('/api/user/data', {headers: {Authorization: token}})
+            console.log("TOKEN SENT:", localStorage.getItem("token"))
+
+            const {data} = await axios.get('/api/user/data', {headers: {Authorization: localStorage.getItem('token')}})
 
             if(data.success){
                 setUser(data.user)
@@ -38,15 +40,54 @@ export const AppContextProvider = ({children}) =>{
         }
     }
 
+    const createNewChat = async () => {
+        try {
+            if(!user) return toast('Login to create a new chat')
+
+            navigate('/')
+
+            await axios.get('/api/chat/create', {headers: {Authorization: localStorage.getItem('token')}})
+            await fetchUserChats()
+
+        } catch (error) {
+            toast.error(error.message)
+        }
+    }
     
     const fetchUserChats = async() =>{
-        setChats(dummyChats)
-        setSelectedChat(dummyChats[0])
+        try {
+            const {data} = await axios.get('/api/chat/get', {headers: {Authorization: localStorage.getItem('token')}})
+
+            if(data.success){
+                setChats(data.chats)
+
+                // if user has no chats
+                if(data.chats.length === 0){
+                    await createNewChat()
+                    return fetchUserChats()
+                }
+                else{
+                    setSelectedChat(data.chats[0])
+                }
+            }
+            else{
+                toast.error(data.message)
+            }
+
+        } catch (error) {
+            toast.error(error.message)
+        }
     }
 
     useEffect(() =>{
-        fetchUser()
-    },[])
+        if(token){
+            fetchUser()
+        }
+        else{
+            setUser(null)
+            setLoadingUser(false)
+        }
+    },[token])
 
     useEffect(() =>{
         if(user){
@@ -69,7 +110,7 @@ export const AppContextProvider = ({children}) =>{
     },[theme])
 
     const value = {
-        navigate, user, setUser, fetchUser, chats, setChats, selectedChat, setSelectedChat, theme, setTheme
+        navigate, user, setUser, fetchUser, chats, setChats, selectedChat, setSelectedChat, theme, setTheme, createNewChat, loadingUser, fetchUserChats, token, setToken, axios
     }
 
     return (

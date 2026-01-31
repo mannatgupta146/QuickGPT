@@ -8,16 +8,27 @@ import messageRouter from './routes/messageRoutes.js'
 import creditRouter from './routes/creditRoutes.js'
 import { stripeWebhooks } from './controllers/webhooks.js'
 
+
 const app = express()
+
+app.use((req, res, next) => {
+  console.log("BACKEND HIT:", req.method, req.url)
+  next()
+})
 
 await connectDB()
 
-// stripe webhooks
-app.post('/api/stripe', express.raw({type: 'application/json'}), stripeWebhooks)
+// Stripe webhook (FIRST)
+app.post(
+  '/api/stripe',
+  express.raw({ type: 'application/json' }),
+  stripeWebhooks
+)
 
-// middlewares
+// Global middlewares
 app.use(cors())
 app.use(express.json())
+
 
 // routes
 app.get('/', (req, res) => {
