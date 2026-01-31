@@ -11,11 +11,6 @@ import { stripeWebhooks } from './controllers/webhooks.js'
 
 const app = express()
 
-app.use((req, res, next) => {
-  console.log("BACKEND HIT:", req.method, req.url)
-  next()
-})
-
 await connectDB()
 
 // Stripe webhook (FIRST)

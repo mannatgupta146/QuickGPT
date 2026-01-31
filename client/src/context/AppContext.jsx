@@ -21,9 +21,8 @@ export const AppContextProvider = ({children}) =>{
 
     const fetchUser = async() =>{
         try {
-            console.log("TOKEN SENT:", localStorage.getItem("token"))
 
-            const {data} = await axios.get('/api/user/data', {headers: {Authorization: localStorage.getItem('token')}})
+            const {data} = await axios.get('/api/user/data', {headers: {Authorization: token}})
 
             if(data.success){
                 setUser(data.user)
@@ -46,7 +45,7 @@ export const AppContextProvider = ({children}) =>{
 
             navigate('/')
 
-            await axios.get('/api/chat/create', {headers: {Authorization: localStorage.getItem('token')}})
+            await axios.get('/api/chat/create', {headers: {Authorization: token}})
             await fetchUserChats()
 
         } catch (error) {
@@ -56,7 +55,7 @@ export const AppContextProvider = ({children}) =>{
     
     const fetchUserChats = async() =>{
         try {
-            const {data} = await axios.get('/api/chat/get', {headers: {Authorization: localStorage.getItem('token')}})
+            const {data} = await axios.get('/api/chat/get', {headers: {Authorization: token}})
 
             if(data.success){
                 setChats(data.chats)
