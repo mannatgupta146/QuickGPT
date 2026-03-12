@@ -67,3 +67,24 @@ export const deleteChat = async(req, res) => {
         })
     }
 }
+
+// api controller to rename chat
+export const renameChat = async(req, res) => {
+    try {
+        const userId = req.user._id
+        const {chatId, name} = req.body
+
+        await Chat.updateOne({_id: chatId, userId}, {name})
+
+        res.json({
+            success: true,
+            message: "Chat renamed"
+        })
+
+    } catch (error) {
+        res.json({
+            success: false,
+            message: error.message
+        })
+    }
+}

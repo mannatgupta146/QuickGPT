@@ -1,14 +1,23 @@
 import React, { useEffect, useState } from 'react'
-import { dummyPlans } from '../assets/assets'
 import Loading from './Loading'
+import { useAppContext } from '../context/AppContext'
 
 const Credits = () => {
   const [plans, setPlans] = useState([])
   const [loading, setLoading] = useState(true)
+  const { buyPlan, axios } = useAppContext()
 
   const fetchPlans = async () => {
-    setPlans(dummyPlans)
-    setLoading(false)
+    try {
+      const { data } = await axios.get('/api/credit/plan')
+      if (data.success) {
+        setPlans(data.plans)
+      }
+    } catch (error) {
+      console.error(error)
+    } finally {
+      setLoading(false)
+    }
   }
 
   useEffect(() => {
@@ -18,16 +27,16 @@ const Credits = () => {
   if (loading) return <Loading />
 
   return (
-    <div className='max-w-7xl h-screen overflow-y-scroll mx-auto px-4 sm:px-6 lg:px-8 py-12'>
-      <h2 className='text-3xl font-semibold text-center mb-12 xl:mt-20 text-gray-800 dark:text-white'>
+    <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 h-full overflow-y-auto'>
+      <h2 className='text-2xl md:text-3xl font-semibold text-center mb-10 md:mb-12 md:mt-20 text-gray-800 dark:text-white'>
         Credit Plans
       </h2>
 
-      <div className='flex flex-wrap justify-center gap-10'>
+      <div className='flex flex-wrap justify-center gap-6 md:gap-10'>
         {plans.map((plan) => (
           <div
             key={plan._id}
-            className={`relative rounded-2xl p-7 min-w-[320px] max-w-sm flex flex-col transition-all duration-300
+            className={`relative rounded-2xl p-6 md:p-7 w-full sm:w-auto sm:min-w-[320px] max-w-sm flex flex-col transition-all duration-300
               hover:-translate-y-1 hover:shadow-xl
               ${
                 plan._id === 'pro'
@@ -80,6 +89,10 @@ const Credits = () => {
 
             {/* Button */}
             <button
+              onClick={() => {
+                console.log(">>> Buy Now clicked for plan:", plan._id);
+                buyPlan(plan._id);
+              }}
               className={`mt-8 py-2.5 rounded-lg font-medium transition-colors
                 ${
                   plan._id === 'pro'

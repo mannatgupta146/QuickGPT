@@ -29,13 +29,13 @@ const plans  =  [
 export const getPlans  =  async(req, res) => {
     try {
         res.json({
-            sucess: true,
+            success: true,
             plans
         })
 
     } catch (error) {
         res.json({
-            sucess: false,
+            success: false,
             message: error.message
         })
     }
@@ -48,6 +48,7 @@ export const purchasePlan = async(req, res) => {
     try {
        const {planId} = req.body
        const userId = req.user._id
+       console.log(`>>> purchasePlan called: planId=${planId}, userId=${userId}`);
 
        const plan = plans.find(plan => plan._id === planId)
 
@@ -67,7 +68,8 @@ export const purchasePlan = async(req, res) => {
         isPaid: false
        })
 
-       const origin = req.headers.origin?.replace(/\/$/, "")
+       const origin = req.headers.origin?.replace(/\/$/, "") || `${req.protocol}://${req.get('host')}`
+       console.log(">>> Stripe Origin:", origin);
 
        const session = await stripe.checkout.sessions.create({
         line_items: [

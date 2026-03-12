@@ -23,12 +23,30 @@ const App = () => {
   return (
     <>
     <Toaster />
-    {!isMenuOpen && <img src={assets.menu_icon} className='absolute top-3 left-3 w-8 h-8 cursor-pointer md:hidden dark:invert'
-    onClick={() =>setIsMenuOpen(true)}/>}
+    {!isMenuOpen && (
+      <button 
+        onClick={() => setIsMenuOpen(true)}
+        className='fixed top-4 left-4 z-40 p-3 bg-white dark:bg-[#1E1A25] border border-purple-200 dark:border-[#80609F]/40 rounded-full shadow-lg md:hidden active:scale-95 transition-all'
+      >
+        <div className='flex flex-col gap-1 w-5 h-4 justify-center items-center'>
+          <div className='w-full h-0.5 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full'></div>
+          <div className='w-full h-0.5 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full'></div>
+          <div className='w-full h-0.5 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full'></div>
+        </div>
+      </button>
+    )}
+
+    {/* Mobile Overlay */}
+    {isMenuOpen && (
+      <div 
+        onClick={() => setIsMenuOpen(false)}
+        className='fixed inset-0 bg-black/40 backdrop-blur-sm z-50 md:hidden'
+      />
+    )}
 
     {user ? (
-      <div className='dark:bg-gradient-to-b from-[#242124] to-[#000000] dark:text-white'>
-      <div className='flex h-screen w-screen'>
+      <div className='dark:bg-[#121015] dark:text-white'>
+      <div className='flex h-screen w-screen overflow-hidden'>
         <SideBar isMenuOpen = {isMenuOpen} setIsMenuOpen = {setIsMenuOpen}/>
         <Routes>
           <Route path="/" element={<ChatBox />} />

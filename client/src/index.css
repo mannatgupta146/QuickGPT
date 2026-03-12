@@ -16,6 +16,24 @@
     display: none;
 }
 
+.custom-scrollbar::-webkit-scrollbar {
+  display: block;
+  width: 5px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(128, 96, 159, 0.2);
+  border-radius: 20px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(128, 96, 159, 0.4);
+}
+
 .reset-tw :not(pre):not(code){
   all: revert;
 }
@@ -26,4 +44,9 @@
 
 .loader div:nth-child(3){
   animation-delay: 0.4s;
+}
+
+body.theme-changing,
+body.theme-changing * {
+  transition: background-color 0.5s ease-in-out, border-color 0.5s ease-in-out, color 0.3s ease-in-out, opacity 0.5s ease-in-out !important;
 }

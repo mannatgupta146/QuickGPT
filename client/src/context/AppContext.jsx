@@ -114,6 +114,14 @@ export const AppContextProvider = ({children}) =>{
             document.documentElement.classList.remove('dark')
         }
         localStorage.setItem('theme', theme)
+
+        // Enable smooth transition temporarily during theme change
+        document.body.classList.add('theme-changing')
+        const timer = setTimeout(() => {
+            document.body.classList.remove('theme-changing')
+        }, 500)
+
+        return () => clearTimeout(timer)
     },[theme])
 
     const sendMessage = async (chatId, prompt, mode, isPublished) => {
@@ -166,8 +174,50 @@ export const AppContextProvider = ({children}) =>{
         }
     }
 
+    const renameChat = async (chatId, newName) => {
+        try {
+            const { data } = await axios.post('/api/chat/rename', { chatId, name: newName }, { headers: { Authorization: token } });
+            if (data.success) {
+                setChats(prev => prev.map(chat => chat._id === chatId ? { ...chat, name: newName } : chat));
+                if (selectedChat?._id === chatId) {
+                    setSelectedChat(prev => ({ ...prev, name: newName }));
+                }
+                toast.success(data.message);
+            } else {
+                toast.error(data.message);
+            }
+        } catch (error) {
+            toast.error(error.message);
+        }
+    }
+
+    const buyPlan = async (planId) => {
+        try {
+            console.log(">>> buyPlan called with planId:", planId);
+            if (!token) {
+                console.error("!!! No token found in AppContext");
+                return toast.error('Login to purchase credits');
+            }
+            
+            console.log(">>> Sending POST request to /api/credit/purchase...");
+            const { data } = await axios.post('/api/credit/purchase', { planId }, { headers: { Authorization: token } });
+            console.log(">>> Received response from /api/credit/purchase:", data);
+            
+            if (data.success) {
+                console.log(">>> Redirecting to Stripe session URL:", data.session);
+                window.location.href = data.session;
+            } else {
+                console.error("!!! API returned failure:", data.message);
+                toast.error(data.message);
+            }
+        } catch (error) {
+            console.error("!!! Catch error in buyPlan:", error);
+            toast.error(error.message);
+        }
+    }
+
     const value = {
-        navigate, user, setUser, fetchUser, chats, setChats, selectedChat, setSelectedChat, theme, setTheme, createNewChat, loadingUser, fetchUserChats, token, setToken, axios, sendMessage
+        navigate, user, setUser, fetchUser, chats, setChats, selectedChat, setSelectedChat, theme, setTheme, createNewChat, loadingUser, fetchUserChats, token, setToken, axios, sendMessage, renameChat, buyPlan
     }
 
     return (
