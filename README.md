@@ -46,7 +46,7 @@ PORT=3000
 MONGODB_URI=your_mongodb_uri
 JWT_SECRET=your_jwt_secret
 GEMINI_API_KEY=your_gemini_key
-FRONTEND_URL=https://your-app.vercel.app
+FRONTEND_URL=https://quick-gpt-cyan-eight.vercel.app
 
 # ImageKit Configuration
 IMAGEKIT_PUBLIC_KEY=your_public_key
@@ -60,7 +60,7 @@ STRIPE_WEBHOOK_SECRET=your_webhook_secret
 
 ### Client (`/client/.env`)
 ```env
-VITE_SERVER_URL=https://your-api.onrender.com
+VITE_SERVER_URL=https://quickgpt-m378.onrender.com
 ```
 
 ---
