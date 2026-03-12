@@ -90,7 +90,6 @@ const Credits = () => {
             {/* Button */}
             <button
               onClick={() => {
-                console.log(">>> Buy Now clicked for plan:", plan._id);
                 buyPlan(plan._id);
               }}
               className={`mt-8 py-2.5 rounded-lg font-medium transition-colors

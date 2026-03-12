@@ -193,25 +193,19 @@ export const AppContextProvider = ({children}) =>{
 
     const buyPlan = async (planId) => {
         try {
-            console.log(">>> buyPlan called with planId:", planId);
             if (!token) {
-                console.error("!!! No token found in AppContext");
                 return toast.error('Login to purchase credits');
             }
             
-            console.log(">>> Sending POST request to /api/credit/purchase...");
             const { data } = await axios.post('/api/credit/purchase', { planId }, { headers: { Authorization: token } });
-            console.log(">>> Received response from /api/credit/purchase:", data);
             
             if (data.success) {
-                console.log(">>> Redirecting to Stripe session URL:", data.session);
                 window.location.href = data.session;
             } else {
-                console.error("!!! API returned failure:", data.message);
                 toast.error(data.message);
             }
         } catch (error) {
-            console.error("!!! Catch error in buyPlan:", error);
+            console.error("!!! buyPlan ERROR !!!", error);
             toast.error(error.message);
         }
     }

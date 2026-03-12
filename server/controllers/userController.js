@@ -25,7 +25,6 @@ export const registerUser = async(req, res) => {
         }
 
         const user = await User.create({name, email, password})
-        console.log("SUCCESS: User created:", user._id);
 
         const token = generateToken(user._id)
 

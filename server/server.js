@@ -37,11 +37,6 @@ app.use(cors({
 app.use(express.json())
 app.use(cookieParser())
 
-app.use((req, res, next) => {
-  console.log(`>>> Incoming Request: ${req.method} ${req.url}`);
-  next();
-});
-
 // routes
 app.get('/', (req, res) => {
     res.send("server is live")
