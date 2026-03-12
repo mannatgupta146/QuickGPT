@@ -25,8 +25,16 @@ export const registerUser = async(req, res) => {
         }
 
         const user = await User.create({name, email, password})
+        console.log("SUCCESS: User created:", user._id);
 
         const token = generateToken(user._id)
+
+        res.cookie('token', token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict',
+            maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
+        });
 
         res.json({
             success: true,
@@ -54,6 +62,14 @@ export const loginUser = async (req, res) => {
 
             if(isMatch){
                 const token = generateToken(user._id)
+                
+                res.cookie('token', token, {
+                    httpOnly: true,
+                    secure: process.env.NODE_ENV === 'production',
+                    sameSite: 'strict',
+                    maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
+                });
+
                 return res.json({
                     success: true,
                     token

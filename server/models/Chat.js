@@ -3,7 +3,6 @@ import mongoose from 'mongoose'
 const chatSchema = new mongoose.Schema({
     userId: {
         type: String,
-        ref: 'User',
         required: true
     },
     userName: {
@@ -25,6 +24,10 @@ const chatSchema = new mongoose.Schema({
                 default: false
             },
             role: {
+                type: String,
+                required: true
+            },
+            content: {
                 type: String,
                 required: true
             },

@@ -2,7 +2,8 @@ import axios from "axios"
 import Chat from "../models/Chat.js"
 import User from "../models/User.js"
 import imageKit from "../configs/imageKit.js"
-import openai from "../configs/openai.js"
+import geminiModel from "../configs/gemini.js"
+import Image from "../models/Image.js"
 
 export const textMessageController = async (req, res) => {
   try {
@@ -17,14 +18,16 @@ export const textMessageController = async (req, res) => {
 
     const { chatId, prompt } = req.body
 
-    const chat = await Chat.findOne({ userId, _id: chatId })
-    if (!chat) {
+    const chat = await Chat.findById(chatId);
+    
+    if (!chat || chat.userId.toString() !== userId.toString()) {
       return res.status(404).json({
         success: false,
         message: "Chat not found",
       })
     }
 
+    // Add user message to DB
     chat.messages.push({
       role: "user",
       content: prompt,
@@ -32,19 +35,22 @@ export const textMessageController = async (req, res) => {
       isImage: false,
     })
 
-    const { choices } = await openai.chat.completions.create({
-      model: "gemini-3-flash-preview",
-      messages: [
-        {
-          role: "user",
-          content: prompt,
-        },
-      ],
-    })
+    // Get AI Response using native Gemini SDK
+    let replyContent;
+    try {
+        const result = await geminiModel.generateContent(prompt);
+        replyContent = result.response.text();
+    } catch (apiError) {
+        console.error("!!! GEMINI API ERROR !!!", apiError);
+        return res.status(500).json({
+            success: false,
+            message: "AI Generation failed: " + apiError.message,
+        });
+    }
 
     const reply = {
       role: "assistant",
-      content: choices[0].message.content,
+      content: replyContent || "Sorry, I couldn't generate a response.",
       timestamp: Date.now(),
       isImage: false,
     }
@@ -62,6 +68,7 @@ export const textMessageController = async (req, res) => {
       reply,
     })
   } catch (error) {
+    console.error("!!! textMessageController ERROR !!!", error);
     res.json({
       success: false,
       message: error.message,
@@ -82,8 +89,9 @@ export const imageMessageController = async (req, res) => {
 
     const { prompt, chatId, isPublished } = req.body
 
-    const chat = await Chat.findOne({ userId, _id: chatId })
-    if (!chat) {
+    const chat = await Chat.findById(chatId);
+    
+    if (!chat || chat.userId.toString() !== userId.toString()) {
       return res.status(404).json({
         success: false,
         message: "Chat not found",
@@ -129,6 +137,17 @@ export const imageMessageController = async (req, res) => {
     chat.messages.push(reply)
     await chat.save()
 
+    // If published, save to global Community Images collection
+    if (isPublished) {
+      await Image.create({
+        userId,
+        userName: req.user.name,
+        imageUrl: uploadResponse.url,
+        prompt: prompt,
+        timestamp: Date.now()
+      })
+    }
+
     await User.updateOne(
       { _id: userId },
       { $inc: { credits: -2 } }
@@ -139,6 +158,7 @@ export const imageMessageController = async (req, res) => {
       reply,
     })
   } catch (error) {
+    console.error("!!! imageMessageController ERROR !!!", error);
     res.json({
       success: false,
       message: error.message,

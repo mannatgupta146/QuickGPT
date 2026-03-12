@@ -6,7 +6,7 @@ const ChatBox = () => {
 
   const containerRef = useRef(null)
 
-  const {selectedChat, theme} = useAppContext();
+  const {selectedChat, theme, sendMessage} = useAppContext();
 
   const [messages, setMessages] = useState([])
   const [loading, setLoading] = useState(false)
@@ -17,6 +17,13 @@ const ChatBox = () => {
 
   const onSubmit = async (e)=>{
     e.preventDefault()
+    if(!selectedChat || !prompt) return;
+
+    setLoading(true)
+    const currentPrompt = prompt;
+    setPrompt('')
+    const success = await sendMessage(selectedChat._id, currentPrompt, mode, isPublished)
+    setLoading(false)
   }
 
   useEffect(() => {
@@ -54,13 +61,22 @@ const ChatBox = () => {
           <Message key={index} message={message}/>
         ))}
 
-        {/* Three Dots Loading */}
+        {/* Premium AI Loading Animation */}
         {
-          loading && <div className='loader flex items-center gap-1.5'>
-            <div className='w-1.5 h-1.5 rounded-full bg-gray-400 dark:bg-white animate-bounce'></div>
-            <div className='w-1.5 h-1.5 rounded-full bg-gray-400 dark:bg-white animate-bounce'></div>
-            <div className='w-1.5 h-1.5 rounded-full bg-gray-400 dark:bg-white animate-bounce'></div>
-          </div>
+          loading && (
+            <div className='flex items-start gap-3 my-4 animate-in fade-in slide-in-from-bottom-2 duration-300'>
+              <div className='p-2 rounded-md bg-primary/20 dark:bg-[#57317C]/30 border border-[#80609F]/30'>
+                <div className='flex gap-1 items-center px-2 py-1'>
+                  <div className='w-2 h-2 rounded-full bg-purple-400 animate-bounce [animation-delay:-0.3s] shadow-[0_0_8px_rgba(192,132,252,0.8)]'></div>
+                  <div className='w-2 h-2 rounded-full bg-purple-500 animate-bounce [animation-delay:-0.15s] shadow-[0_0_8px_rgba(168,85,247,0.8)]'></div>
+                  <div className='w-2 h-2 rounded-full bg-purple-600 animate-bounce shadow-[0_0_8px_rgba(147,51,234,0.8)]'></div>
+                  <span className='ml-2 text-xs font-medium text-purple-600 dark:text-purple-400 uppercase tracking-wider animate-pulse'>
+                    {mode === 'image' ? 'AI is generating image...' : 'AI is thinking...'}
+                  </span>
+                </div>
+              </div>
+            </div>
+          )
         }
       </div>
 

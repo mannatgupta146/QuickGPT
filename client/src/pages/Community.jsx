@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { dummyPublishedImages } from '../assets/assets'
+import axios from 'axios'
 import Loading from './Loading'
 
 const Community = () => {
@@ -8,8 +8,16 @@ const Community = () => {
   const [loading, setLoading] = useState(true)
 
   const fetchImages = async()=>{
-    setImages(dummyPublishedImages)
-    setLoading(false)
+    try {
+        const { data } = await axios.get('/api/image/get')
+        if (data.success) {
+            setImages(data.images)
+        }
+    } catch (error) {
+        console.error("Error fetching images:", error)
+    } finally {
+        setLoading(false)
+    }
   }
 
   useEffect(()=>{
